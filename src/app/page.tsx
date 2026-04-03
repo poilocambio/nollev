@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import Hero from '@/components/Hero'
-import CategoryGrid from '@/components/CategoryGrid'
-import CompanyList from '@/components/CompanyList'
+// import CategoryGrid from '@/components/CategoryGrid'
+// import CompanyList from '@/components/CompanyList'
 import HowItWorks from '@/components/HowItWorks'
 import CtaBusiness from '@/components/CtaBusiness'
 import Footer from '@/components/Footer'
@@ -30,8 +30,8 @@ export default function Home() {
   return (
     <main>
       <Hero onSearch={handleSearch} />
-      <CategoryGrid active={filters.category} onChange={handleCategory} />
-      <CompanyList companies={companies} filters={filters} />
+      {/* <CategoryGrid active={filters.category} onChange={handleCategory} /> */}
+      {/* <CompanyList companies={companies} filters={filters} /> */}
       <HowItWorks />
       <CtaBusiness />
       <Footer />
