@@ -10,7 +10,7 @@ export interface Company {
   id: string
   name: string
   slug: string
-  category: Category
+  category: Category[]
   description: string
   zone: string
   phone: string

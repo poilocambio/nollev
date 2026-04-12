@@ -11,7 +11,7 @@ interface CompanyListProps {
 function filterCompanies(companies: Company[], filters: SearchFilters): Company[] {
   return companies.filter((c) => {
     // Category filter
-    if (filters.category !== 'tutte' && c.category !== filters.category) return false
+    if (filters.category !== 'tutte' && !c.category.includes(filters.category)) return false
 
     // Zone filter
     if (filters.zone && filters.zone !== 'Tutta Roma' && c.zone !== filters.zone) return false
