@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { Search } from 'lucide-react'
 import { Category, SearchFilters } from '@/lib/types'
 import { zones } from '@/data/companies'
@@ -19,82 +19,105 @@ interface HeroProps {
 }
 
 export default function Hero({ onSearch }: HeroProps) {
+  const queryId = useId()
+  const zoneId = useId()
   const [query, setQuery] = useState('')
   const [zone, setZone] = useState('Tutta Roma')
+
+  function scrollToResults() {
+    document.getElementById('aziende')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     onSearch({ query, category: 'tutte', zone })
-    // scroll to results
-    document.getElementById('aziende')?.scrollIntoView({ behavior: 'smooth' })
+    scrollToResults()
   }
 
   function handleTag(category: Category, label: string) {
     setQuery(label)
     onSearch({ query: label, category, zone })
-    document.getElementById('aziende')?.scrollIntoView({ behavior: 'smooth' })
+    scrollToResults()
   }
 
   return (
-    <section className="relative bg-[#0D1117] overflow-hidden">
-      {/* Grid pattern */}
-      <div className="absolute inset-0 grid-pattern" />
+    <section
+      aria-label="Ricerca aziende di noleggio"
+      className="relative bg-ink overflow-hidden"
+    >
+      <div className="absolute inset-0 grid-pattern" aria-hidden="true" />
 
-      {/* Glow */}
       <div
+        aria-hidden="true"
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full opacity-10"
-        style={{ background: 'radial-gradient(ellipse, #E8D5A3 0%, transparent 70%)' }}
+        style={{
+          background: 'radial-gradient(ellipse, #E8D5A3 0%, transparent 70%)',
+        }}
       />
 
       <div className="relative max-w-5xl mx-auto px-6 pt-8 pb-16">
-        {/* Nav */}
-        <nav className="flex items-center justify-between mb-16">
+        <nav
+          aria-label="Navigazione principale"
+          className="flex items-center justify-between mb-16"
+        >
           <div className="font-serif text-xl text-white tracking-tight">
-            Nol<span className="text-[#E8D5A3]">lev</span>
+            Noleggia <span className="text-gold">Roma</span>
           </div>
           <a
             href="#aziende-cta"
-            className="text-xs text-white/50 border border-white/15 px-4 py-2 rounded-full hover:bg-white/8 hover:text-white/90 transition-all duration-200"
+            className="text-xs text-white/70 border border-white/15 px-4 py-2 rounded-full hover:bg-white/10 hover:text-white transition-all duration-200"
           >
             Sei un&apos;azienda? →
           </a>
         </nav>
 
-        {/* Eyebrow */}
-        <p className="text-[11px] tracking-[3px] uppercase text-[#E8D5A3] mb-5 font-sans">
+        <p className="text-[11px] tracking-[3px] uppercase text-gold mb-5 font-sans">
           Roma · Noleggio Attrezzatura Eventi
         </p>
 
-        {/* Headline */}
         <h1 className="font-serif text-4xl md:text-5xl lg:text-[56px] text-white mb-6 max-w-[580px] leading-[1.08]">
           Trova chi noleggia{' '}
-          <em className="text-[#E8D5A3] italic">quello che ti serve</em>,
-          per la data che hai.
+          <em className="text-gold italic">quello che ti serve</em>, per la
+          data che hai.
         </h1>
 
-        <p className="text-white/50 text-[15px] leading-relaxed mb-10 max-w-[440px] font-sans font-light">
-          Ledwall, audio, tensostrutture, luci — tutte le aziende di noleggio eventi
-          di Roma in un posto solo.
+        <p className="text-white/70 text-[15px] leading-relaxed mb-10 max-w-[440px] font-sans font-light">
+          Ledwall, audio, tensostrutture, luci — tutte le aziende di noleggio
+          eventi di Roma in un posto solo.
         </p>
 
-        {/* Search bar */}
         <form
           onSubmit={handleSubmit}
-          className="flex items-center gap-3 bg-white rounded-[14px] p-[6px] pl-5 max-w-[600px] shadow-[0_0_0_1px_rgba(255,255,255,0.1)]"
+          role="search"
+          aria-label="Cerca attrezzatura"
+          className="flex items-center gap-3 bg-white rounded-[14px] p-[6px] pl-5 max-w-[600px] shadow-[0_0_0_1px_rgba(255,255,255,0.1)] focus-within:shadow-[0_0_0_2px_#E8D5A3]"
         >
-          <Search size={16} className="text-zinc-400 shrink-0" />
+          <label htmlFor={queryId} className="sr-only">
+            Cerca attrezzatura
+          </label>
+          <Search
+            size={16}
+            className="text-zinc-400 shrink-0"
+            aria-hidden="true"
+          />
           <input
-            type="text"
+            id={queryId}
+            type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Cerca per attrezzatura…"
+            autoComplete="off"
             className="flex-1 bg-transparent text-sm text-zinc-800 placeholder:text-zinc-400 outline-none font-sans min-w-0"
           />
-          <div className="w-px h-6 bg-zinc-200 shrink-0" />
+          <div className="w-px h-6 bg-zinc-200 shrink-0" aria-hidden="true" />
+          <label htmlFor={zoneId} className="sr-only">
+            Zona di Roma
+          </label>
           <select
+            id={zoneId}
             value={zone}
             onChange={(e) => setZone(e.target.value)}
-            className="text-sm text-zinc-500 bg-transparent outline-none cursor-pointer font-sans pr-1 shrink-0"
+            className="text-sm text-zinc-600 bg-transparent outline-none cursor-pointer font-sans pr-1 shrink-0"
           >
             {zones.map((z) => (
               <option key={z}>{z}</option>
@@ -102,38 +125,48 @@ export default function Hero({ onSearch }: HeroProps) {
           </select>
           <button
             type="submit"
-            className="bg-[#0D1117] text-[#E8D5A3] text-sm font-medium px-5 py-3 rounded-[10px] whitespace-nowrap hover:bg-[#1a2332] transition-colors duration-200 shrink-0 font-sans"
+            className="bg-ink text-gold text-sm font-medium px-5 py-3 rounded-[10px] whitespace-nowrap hover:bg-ink-soft transition-colors duration-200 shrink-0 font-sans focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
           >
             Cerca
           </button>
         </form>
 
-        {/* Quick tags */}
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div
+          className="flex flex-wrap gap-2 mt-4"
+          role="list"
+          aria-label="Ricerche frequenti"
+        >
           {quickTags.map((tag) => (
             <button
               key={tag.label}
+              type="button"
+              role="listitem"
               onClick={() => handleTag(tag.category, tag.label)}
-              className="text-xs text-white/50 border border-white/15 px-3 py-[5px] rounded-full hover:border-[#E8D5A3] hover:text-[#E8D5A3] transition-all duration-200 font-sans"
+              className="text-xs text-white/70 border border-white/15 px-3 py-[5px] rounded-full hover:border-gold hover:text-gold transition-all duration-200 font-sans focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
             >
               {tag.label}
             </button>
           ))}
         </div>
 
-        {/* Stats */}
-        <div className="flex gap-10 mt-14 pt-10 border-t border-white/[0.08]">
+        <dl className="flex gap-10 mt-14 pt-10 border-t border-white/[0.08]">
           {[
             { n: '13+', l: 'Aziende verificate' },
             { n: '6', l: 'Categorie' },
             { n: 'Roma', l: 'Zona di lancio' },
           ].map((s) => (
             <div key={s.l}>
-              <div className="font-serif text-3xl text-white">{s.n}</div>
-              <div className="text-xs text-white/40 mt-1 font-sans">{s.l}</div>
+              <dt className="sr-only">{s.l}</dt>
+              <dd className="font-serif text-3xl text-white">{s.n}</dd>
+              <dd
+                className="text-xs text-white/60 mt-1 font-sans"
+                aria-hidden="true"
+              >
+                {s.l}
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   )

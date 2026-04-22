@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Hero from '@/components/Hero'
 import CategoryGrid from '@/components/CategoryGrid'
 import CompanyList from '@/components/CompanyList'
@@ -8,7 +8,12 @@ import HowItWorks from '@/components/HowItWorks'
 import CtaBusiness from '@/components/CtaBusiness'
 import Footer from '@/components/Footer'
 import { supabase } from '@/lib/supabase'
-import { Company, Category, SearchFilters } from '@/lib/types'
+import {
+  Category,
+  Company,
+  SearchFilters,
+  parseCompanies,
+} from '@/lib/types'
 
 const defaultFilters: SearchFilters = {
   query: '',
@@ -16,31 +21,45 @@ const defaultFilters: SearchFilters = {
   zone: 'Tutta Roma',
 }
 
+type Status = 'loading' | 'error' | 'ready'
+
 export default function Home() {
   const [filters, setFilters] = useState<SearchFilters>(defaultFilters)
   const [companies, setCompanies] = useState<Company[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [status, setStatus] = useState<Status>('loading')
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
-    async function fetchCompanies() {
-      setLoading(true)
+    let cancelled = false
+
+    ;(async () => {
       const { data, error } = await supabase
         .from('companies')
         .select('*')
         .order('verified', { ascending: false })
         .order('rating', { ascending: false })
 
-      if (error) {
-        setError('Errore nel caricamento delle aziende.')
-        console.error(error)
-      } else {
-        setCompanies(data as Company[])
-      }
-      setLoading(false)
-    }
+      if (cancelled) return
 
-    fetchCompanies()
+      if (error) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(error)
+        }
+        setStatus('error')
+      } else {
+        setCompanies(parseCompanies(data))
+        setStatus('ready')
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [attempt])
+
+  const retry = useCallback(() => {
+    setStatus('loading')
+    setAttempt((n) => n + 1)
   }, [])
 
   function handleSearch(f: SearchFilters) {
@@ -52,12 +71,17 @@ export default function Home() {
   }
 
   return (
-    <main>
+    <main id="main">
       <Hero onSearch={handleSearch} />
       <CategoryGrid active={filters.category} onChange={handleCategory} />
 
-      {loading && (
-        <div className="max-w-5xl mx-auto px-6 pb-20">
+      {status === 'loading' && (
+        <div
+          className="max-w-5xl mx-auto px-6 pb-20"
+          role="status"
+          aria-live="polite"
+          aria-label="Caricamento aziende"
+        >
           <div className="flex flex-col gap-3">
             {[1, 2, 3].map((i) => (
               <div
@@ -69,13 +93,24 @@ export default function Home() {
         </div>
       )}
 
-      {error && (
-        <div className="max-w-5xl mx-auto px-6 pb-20">
-          <p className="text-sm text-red-500 font-sans">{error}</p>
+      {status === 'error' && (
+        <div className="max-w-5xl mx-auto px-6 pb-20" role="alert">
+          <div className="text-center py-16 border border-red-100 rounded-xl bg-red-50/50">
+            <p className="text-sm text-red-600 font-sans mb-4">
+              Errore nel caricamento delle aziende.
+            </p>
+            <button
+              type="button"
+              onClick={retry}
+              className="text-xs bg-ink text-gold px-5 py-2.5 rounded-lg hover:bg-ink-soft transition-colors font-sans"
+            >
+              Riprova
+            </button>
+          </div>
         </div>
       )}
 
-      {!loading && !error && (
+      {status === 'ready' && (
         <CompanyList companies={companies} filters={filters} />
       )}
 

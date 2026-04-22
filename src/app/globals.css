@@ -1,27 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
 @import "tailwindcss";
 
-:root {
-  --gold: #E8D5A3;
-  --gold-dark: #C9B07A;
-  --ink: #0D1117;
+@theme {
+  --color-ink: #0D1117;
+  --color-ink-soft: #1A2332;
+  --color-gold: #E8D5A3;
+  --color-gold-dark: #C9B07A;
+  --color-whatsapp: #25D366;
+  --color-whatsapp-hover: #1FB058;
+
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  --font-serif: var(--font-dm-serif), Georgia, serif;
 }
 
 body {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   background: white;
   color: #18181b;
 }
 
 h1, h2, h3, h4 {
-  font-family: 'DM Serif Display', Georgia, serif;
+  font-family: var(--font-serif);
   font-weight: 400;
   line-height: 1.1;
-}
-
-.font-serif {
-  font-family: 'DM Serif Display', Georgia, serif;
 }
 
 .grid-pattern {
@@ -29,4 +30,21 @@ h1, h2, h3, h4 {
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
+}
+
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9999;
+  padding: 0.75rem 1rem;
+  background: var(--color-ink);
+  color: var(--color-gold);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  border-radius: 0 0 0.5rem 0;
+}
+
+.skip-to-content:focus {
+  left: 0;
 }
