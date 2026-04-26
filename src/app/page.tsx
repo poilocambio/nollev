@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Hero from '@/components/Hero'
 import CategoryGrid from '@/components/CategoryGrid'
 import CompanyList from '@/components/CompanyList'
+import CompanyCardSkeleton from '@/components/CompanyCardSkeleton'
 import HowItWorks from '@/components/HowItWorks'
 import CtaBusiness from '@/components/CtaBusiness'
 import Footer from '@/components/Footer'
@@ -70,9 +71,14 @@ export default function Home() {
     setFilters((prev) => ({ ...prev, category: cat }))
   }
 
+  const verifiedCount = companies.filter((c) => c.verified).length
+
   return (
     <main id="main">
-      <Hero onSearch={handleSearch} />
+      <Hero
+        onSearch={handleSearch}
+        companyCount={status === 'ready' ? verifiedCount : undefined}
+      />
       <CategoryGrid active={filters.category} onChange={handleCategory} />
 
       {status === 'loading' && (
@@ -84,10 +90,7 @@ export default function Home() {
         >
           <div className="flex flex-col gap-3">
             {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-20 rounded-xl bg-zinc-100 animate-pulse"
-              />
+              <CompanyCardSkeleton key={i} />
             ))}
           </div>
         </div>

@@ -16,9 +16,10 @@ const quickTags: { label: string; category: Category }[] = [
 
 interface HeroProps {
   onSearch: (filters: SearchFilters) => void
+  companyCount?: number
 }
 
-export default function Hero({ onSearch }: HeroProps) {
+export default function Hero({ onSearch, companyCount }: HeroProps) {
   const queryId = useId()
   const zoneId = useId()
   const [query, setQuery] = useState('')
@@ -151,7 +152,10 @@ export default function Hero({ onSearch }: HeroProps) {
 
         <dl className="flex gap-10 mt-14 pt-10 border-t border-white/[0.08]">
           {[
-            { n: '13+', l: 'Aziende verificate' },
+            {
+              n: companyCount != null ? `${companyCount}` : '…',
+              l: 'Aziende verificate',
+            },
             { n: '6', l: 'Categorie' },
             { n: 'Roma', l: 'Zona di lancio' },
           ].map((s) => (
