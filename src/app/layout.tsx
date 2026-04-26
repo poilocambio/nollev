@@ -67,6 +67,11 @@ export const metadata: Metadata = {
     description:
       'Trova aziende di noleggio attrezzatura per eventi a Roma. Contatto diretto, nessun intermediario.',
   },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-32x32.png',
+    apple: '/apple-touch-icon.png',
+  },
   robots: {
     index: true,
     follow: true,
