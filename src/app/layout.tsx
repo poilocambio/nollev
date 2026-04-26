@@ -60,12 +60,21 @@ export const metadata: Metadata = {
     siteName: 'Noleggia Roma',
     type: 'website',
     locale: 'it_IT',
+    images: [
+    {
+      url: '/og.png',
+      width: 1200,
+      height: 630,
+      alt: 'Noleggia Roma — Noleggio attrezzatura eventi a Roma',
+    },
+  ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Noleggia Roma — Noleggio Attrezzatura Eventi',
     description:
       'Trova aziende di noleggio attrezzatura per eventi a Roma. Contatto diretto, nessun intermediario.',
+    images: ['/og.png'],
   },
   icons: {
     icon: '/favicon.ico',
