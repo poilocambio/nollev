@@ -53,9 +53,9 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Noleggia Roma — Noleggio Attrezzatura Eventi',
+    title: 'Noleggia Roma — Noleggio Attrezzatura per il tuo Evento',
     description:
-      'Trova aziende di noleggio attrezzatura per eventi a Roma. Contatto diretto, nessun intermediario.',
+      'Trova aziende di noleggio attrezzatura per eventi a Roma. Ledwall, audio, tensostrutture, luci, gazebo — tutte in un posto solo. Contatto diretto via WhatsApp.',
     url: siteUrl,
     siteName: 'Noleggia Roma',
     type: 'website',
@@ -71,9 +71,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Noleggia Roma — Noleggio Attrezzatura Eventi',
+    title: 'Noleggia Roma — Noleggio Attrezzatura per il tuo Evento',
     description:
-      'Trova aziende di noleggio attrezzatura per eventi a Roma. Contatto diretto, nessun intermediario.',
+      'Trova aziende di noleggio attrezzatura per eventi a Roma. Ledwall, audio, tensostrutture, luci, gazebo — tutte in un posto solo. Contatto diretto via WhatsApp.',
     images: ['/og.png'],
   },
   icons: {
