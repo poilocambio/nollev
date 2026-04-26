@@ -146,7 +146,6 @@ function buildJsonLd(company: Company) {
             reviewCount: company.review_count,
           }
         : undefined,
-    category: cat?.label,
     sameAs: company.website ? [company.website] : undefined,
   }
 }
