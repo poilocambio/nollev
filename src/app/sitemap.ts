@@ -1,7 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { supabase } from '@/lib/supabase'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://noleggiaroma.it'
+const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://noleggiaroma.it'
+).replace(/\/$/, '')
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
